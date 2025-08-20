@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import mongoose = require("mongoose");
 import authRoutes = require("./routes/authRoutes");
 import bodyParser = require("body-parser");
+const requireAuth = require("./middlewares/requireAuth");
 
 const express = require("express");
 
@@ -21,8 +22,8 @@ mongoose.connection.on("connected", () => [
 mongoose.connection.on("error", (err) => [
 	console.log("Error connecting to Mongo instance", err),
 ]);
-app.get("/", (req: Request, res: Response) => {
-	res.send("Hi there!");
+app.get("/", requireAuth, (req: Request, res: Response) => {
+	res.send(`Your Email is ${req.user.email}`);
 });
 
 app.listen(3001, () => {
